@@ -12,18 +12,25 @@ async function parse(res) {
   throw new Error(detail);
 }
 
-export async function getHealth(base, signal) {
-  return parse(await fetch(`${clean(base)}/health`, { headers: HEADERS, signal }));
+async function call(url, init) {
+  try {
+    return await parse(await fetch(url, init));
+  } catch (e) {
+    if (e.name === "AbortError") throw e;
+    if (e instanceof TypeError) {
+      // fetch() only throws TypeError for network, CORS and tunnel failures.
+      throw new Error("The backend did not answer. The Colab session may have stopped, or the tunnel closed the request (quick tunnels cut requests after about 100 s). Restart the tunnel cell and paste the new URL.");
+    }
+    throw e;
+  }
 }
 
-export async function getBenchmarks(base, signal) {
-  return parse(await fetch(`${clean(base)}/benchmarks`, { headers: HEADERS, signal }));
-}
+export const getHealth = (base, signal) => call(`${clean(base)}/health`, { headers: HEADERS, signal });
 
-export async function restore(base, { image, gt, task }, signal) {
+export function restore(base, { image, gt }, signal) {
   const form = new FormData();
   form.append("image", image);
-  form.append("task", task);
+  form.append("task", "deblur");
   if (gt) form.append("gt", gt);
-  return parse(await fetch(`${clean(base)}/restore`, { method: "POST", body: form, headers: HEADERS, signal }));
+  return call(`${clean(base)}/restore`, { method: "POST", body: form, headers: HEADERS, signal });
 }

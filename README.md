@@ -1,29 +1,40 @@
-# Restoration Fusion: demo website
+# DFFN: Deep Feature Fusion Network for Image Deblurring (project website)
 
-One page. Upload an image, pick Deblurring or Deraining, get four outputs side by side
-(HINet, SFNet, AdaIR, Fusion) plus PSNR/SSIM. All ML runs in Google Colab; the React page only
-sends the image and shows results.
+One page for the B.Tech project (IGDTUW, November 2026): abstract, method, GoPro results, what the gate learned,
+cost, limitations, and a live demo where you upload a blurry image and get HINet, SFNet, AdaIR, plain output
+averaging and DFFN side by side (plus PSNR / SSIM if you add the sharp image). All ML runs in Google Colab; the React
+page only sends the image.
 
 ```
 frontend/   Vite + React single page
-backend/    restoration_fusion_backend.ipynb  (Colab, FastAPI + Cloudflare tunnel)
-            restoration_fusion_backend.py     (same code, '# %%' cells; run build_notebook.py to regenerate the .ipynb)
+  src/config.js            ALL text and ALL reported numbers (edit here to change the page)
+  src/sections/Report.jsx  hero, abstract, method, results, trust explorer, cost, limitations, citation
+  src/sections/Demo.jsx    backend connection, upload, compare / zoom / error maps / trust map
+  src/components/          BeforeAfter slider, Pipeline diagram
+  src/api.js               GET /health, POST /restore
+  public/report/           figures from the report (panel_*.jpg are the trust-strip panels, cropped)
+backend/
+  restoration_fusion_backend_v9_dffn_final.ipynb   current backend (HINet + SFNet + AdaIR + DFFN)
+  archive_v5/                                      earlier NAFNet-based backend, no longer used by the site
 ```
 
 ## Run it
-1. Open `backend/restoration_fusion_backend.ipynb` in Colab (GPU runtime), run all cells.
+1. Open `backend/restoration_fusion_backend_v9_dffn_final.ipynb` in Colab on a **GPU runtime** and run the cells top
+   to bottom. Set `SFNET_HF_REPO` in the CONFIG cell (see the one-time cell below it) and keep the trained DFFN
+   checkpoint in `MyDrive/DFFN` (`checkpoints/final/deblur_dffn.pt` or `results/final/ckpt/deblur_DFFN.pt`).
    The last cell prints `https://xxxx.trycloudflare.com`.
-2. `cd frontend && npm install && npm run dev`, open the page, paste that URL in "Backend URL".
-   (Or put it in `frontend/.env` as `VITE_API_URL=...`.)
-3. Drop an image. Optionally also drop the ground-truth clean image to get per-image PSNR/SSIM.
+2. `cd frontend && npm install && npm run dev`, open the page, paste that URL into **Backend URL**
+   (or put `VITE_API_URL=...` in `frontend/.env`).
 
-## API
-- `GET /health`, `GET /benchmarks`
-- `POST /restore` multipart: `image`, `task` (`deblur` | `derain`), optional `gt`
+## API (as served by the v9 notebook)
+- `GET /health`: GPU name, which experts loaded, whether DFFN weights loaded
+- `POST /restore` multipart: `image`, optional `gt` (the sharp image). Returns each output as a PNG data URL, PSNR / SSIM
+  when `gt` is given, the trust map and each expert's average share.
 
-## To finish later
-- Train the two fusion models and save state_dicts to `/content/weights/fusion_deblur.pth` and
-  `fusion_derain.pth`. Until then fusion is an identity-initialised placeholder (equals a plain average)
-  and the UI says so.
-- Fill `/content/benchmarks.json` with your test-set averages (the page shows it in "Test-set averages").
-- Set the project name in `frontend/src/config.js`.
+## Notes
+- Numbers on the page are the report's: GoPro test set (1,111 images), DFFN 33.45 dB / 0.9448, 0.24M trained parameters.
+  Expert order everywhere is HINet, SFNet, AdaIR, matching `ORDER` in the notebook. Expert colours (blue, amber,
+  magenta) are the trust-map colours the backend also uses; change them in `config.js` only.
+- Still open in `config.js`: author profile links and the "Report" link are `null` (they render without a link / as "soon").
+  The BibTeX entry is a `@techreport` for the B.Tech report; change it if you publish a paper.
+- Quick Cloudflare tunnels cut a request after about 100 s; the page explains this if the backend stops answering.
