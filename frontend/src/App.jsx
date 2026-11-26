@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
-import { Abstract, Cite, Cost, Footer, Hero, Limits, Method, Results, Tri, Trust } from "./sections/Report.jsx";
+import { Abstract, Cite, Cost, Footer, Hero, 
+  // Limits, 
+  Method, Results, Tri, Trust } from "./sections/Report.jsx";
 import Demo from "./sections/Demo.jsx";
 import { EXPERTS, PROJECT_NAME } from "./config.js";
 
@@ -16,7 +18,7 @@ const SECTIONS = [
   ["trust", "Learned trust"],
   ["demo", "Demo"],
   ["cost", "Cost"],
-  ["limits", "Limitations"],
+  // ["limits", "Limitations"],
   ["cite", "Cite"],
 ];
 
@@ -93,7 +95,7 @@ export default function App() {
             <Trust />
             <Demo />
             <Cost />
-            <Limits />
+            {/* <Limits /> */}
             <Cite />
           </main>
         </div>

@@ -125,13 +125,13 @@ export const FUSER_PARAMS = [
 export const COST_NOTE = "AdaIR accounts for roughly 65% of inference time. Because the learned gate gives it almost no weight, it is the obvious candidate to remove in a future version. That would mean retraining the fusion module without it, which was not tested here. Latency and GMACs for the final pipeline were not recorded.";
 export const FUSER_M = 0.242;
 
-export const LIMITATIONS = [
-  "Gains over the best expert are small (+0.23 dB) and come from one short training run with one seed, so there are no confidence intervals.",
-  "The gate effectively ignores AdaIR, so the final system behaves like a two-expert blend that still pays for a third network at inference time.",
-  "Only the last full-resolution feature map is fused. Multi-scale feature fusion is planned future work.",
-  "Latency and compute of the final pipeline were not measured.",
-  "The demo downsizes any image larger than the backend’s limit so all three experts fit on a T4. Scores on your own image can sit above or below the test-set averages.",
-];
+// export const LIMITATIONS = [
+//   "Gains over the best expert are small (+0.23 dB) and come from one short training run with one seed, so there are no confidence intervals.",
+//   "The gate effectively ignores AdaIR, so the final system behaves like a two-expert blend that still pays for a third network at inference time.",
+//   "Only the last full-resolution feature map is fused. Multi-scale feature fusion is planned future work.",
+//   "Latency and compute of the final pipeline were not measured.",
+//   "The demo downsizes any image larger than the backend’s limit so all three experts fit on a T4. Scores on your own image can sit above or below the test-set averages.",
+// ];
 
 export const NOTES = [
   ["What the demo does", "It sends one image to a GPU backend running the three frozen experts and the trained DFFN module. You get each expert’s output, the plain average, the DFFN output and the per-pixel trust map. If you also add the sharp version of the same image, PSNR and SSIM are computed for every output."],

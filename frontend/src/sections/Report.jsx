@@ -3,8 +3,9 @@ import BeforeAfter from "../components/BeforeAfter.jsx";
 import Pipeline from "../components/Pipeline.jsx";
 import {
   ABSTRACT, AFFILIATION, ANALYSIS, AUTHORS, BIBTEX, COST_NOTE, EXPERTS, FUSER_M, FUSER_PARAMS, GLANCE, GUIDE,
-  KEYWORDS, LIMITATIONS, LINKS, METHOD_STEPS, NOTES, PLOT, REFERENCES, SUBTITLE, TABLE, TABLE_DELTAS, TITLE,
+  KEYWORDS,  LINKS, METHOD_STEPS, NOTES, PLOT, REFERENCES, SUBTITLE, TABLE, TABLE_DELTAS, TITLE,
   TRAINING, WEIGHTS,
+  // LIMITATIONS,
 } from "../config.js";
 
 const base = import.meta.env.BASE_URL;
@@ -287,14 +288,14 @@ export function Cost() {
   );
 }
 
-export function Limits() {
-  return (
-    <section id="limits" className="s">
-      <h2>Limitations</h2>
-      <ul className="points">{LIMITATIONS.map((l) => <li key={l}>{l}</li>)}</ul>
-    </section>
-  );
-}
+// export function Limits() {
+//   return (
+//     <section id="limits" className="s">
+//       <h2>Limitations</h2>
+//       <ul className="points">{LIMITATIONS.map((l) => <li key={l}>{l}</li>)}</ul>
+//     </section>
+//   );
+// }
 
 export function Notes() {
   return (
