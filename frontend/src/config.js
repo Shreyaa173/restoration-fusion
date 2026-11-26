@@ -20,7 +20,7 @@ export const AFFILIATION =
 // url: null renders a disabled "Soon" button
 export const LINKS = [
   { label: "Live demo", url: "#demo", primary: true },
-  { label: "Code", url: "https://github.com/Shreyaa173/restoration-fusion" },
+  { label: "Code", url: "https://github.com/Shreyaa173/Pixel-wise-reliability-gate" },
   { label: "Report", url: null },
 ];
 
